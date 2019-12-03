@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}">
+    <head>
+        <title>Messages</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div id="messages">
+                
+            </div>   
+            
+            <script>
+                
+                
+        function loadMessages() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("messages").innerHTML = this.responseText;
+            }
+            };
+            xhttp.open("GET", "/messages/inbox", true);
+            xhttp.send();
+        }
+        
+        window.setInterval(loadMessages, 10000);
+        
+        
+        
+        
+    </script>
+        </div>
+        
+        
+    </body>
+    
+    
+</html>

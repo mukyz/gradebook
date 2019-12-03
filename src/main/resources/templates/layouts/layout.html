@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title layout:title-pattern = "$LAYOUT_TITLE - $CONTENT_TITLE">eDnevnik</title>
+        <link th:href ="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen" >
+        <link th:href="@{/css/dashboard.css}" rel="stylesheet" >
+        <link th:href="@{/css/select2.min.css}" rel="stylesheet" />
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+        <script th:src="@{/webjars/jquery/3.4.1/jquery.min.js}" ></script> 
+        
+        <script sec:authorize="hasAnyAuthority('PRINCIPAL')" src="https://www.amcharts.com/lib/4/core.js"></script>
+        <script sec:authorize="hasAnyAuthority('PRINCIPAL')" src="https://www.amcharts.com/lib/4/charts.js"></script>
+        <script sec:authorize="hasAnyAuthority('PRINCIPAL')" src="https://www.amcharts.com/lib/4/themes/animated.js"></script> 
+        
+        <style sec:authorize="hasAnyAuthority('PRINCIPAL')">
+        #chartdiv {
+          width: 100%;
+          height: 400px;
+        }
+
+        </style>
+            
+    </head>
+    <body>
+        <div th:replace="/fragments/header :: header"> header to be inserted here </div> 
+                
+        <div class="container-fluid">
+            <div class="row">
+                <div layout:fragment="sidebar" class="col-12 col-md-2 sidebar bg-light"></div>
+                <main class="col-md-10 ml-sm-auto px-4">
+                    <div layout:fragment="content">
+                        This is the content section
+                    </div>
+                </main>
+            </div>
+            
+        </div>
+        <footer th:replace="/fragments/footer:: footer">
+        </footer> 
+        
+        <script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.bundle.min.js}"></script>
+        <script th:src="@{/js/select2.min.js}"></script>
+        
+        <script>
+        $(document).ready(function() {
+            $('#students').select2();
+            $('#courses').select2();
+        });
+        </script>
+        <script sec:authorize="hasAnyAuthority('TEACHER', 'PARENT')" th:src="@{/js/unreadCount.js}"></script>
+        
+    </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}">
+    <head>
+        <title>Message</title>      
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/messages/fragments/sidebar::sidebar('null')"></div>
+        <div layout:fragment="content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h3" th:text="${'Subject: '+message.subject}"></h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a class="btn btn-sm btn-primary" 
+                       th:if="${canReply == true}" 
+                       th:href="@{/messages/new_message(receiverId = ${message.sender.id}, subject=${'RE:' + message.subject})}" 
+                       role="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-up-left"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg>
+                        Reply
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    From: <span th:text="${message.sender.username}"></span> <br />
+                    To: <span th:text="${message.receiver.username}"></span> <br/>
+                    Time: <span th:text="${message.timeSent}"></span>
+                    
+                </div>
+                <div class="card-body">                    
+                    <p class="card-text" th:text="${message.message}"></p>                    
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

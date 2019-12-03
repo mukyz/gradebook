@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html layout:decorate="layouts/layout">
+    <head>
+        <title th:text="${heading}">Create User</title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/administrator/fragments/sidebar::sidebar('users')"></div>
+        
+        <div layout:fragment="content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2" th:text="${heading}"></h1>
+            </div>
+            <form th:action="@{/administrator/users/new}" th:object="${userDTO}" method="post">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" th:field="*{username}" required th:classappend="${unique == true ? 'is-invalid':''}"/>
+                    <th:block th:if="${unique}">
+                    <div class="invalid-feedback">Username is not unique</div>
+                    </th:block>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" th:field="*{password}" />
+                </div>
+                
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role" class="form-control" name="role" th:field="*{roleId}" >
+                        <option th:each="role:${roles}" th:value="${role.id}" th:text="${role.roleName}"></option>
+                    </select>                  
+                </div>
+                <input type="hidden" th:field="*{id}" />
+                <input type="submit" class="btn btn-primary" value="Save"/>
+            </form>
+        </div>
+    </body>
+</html>

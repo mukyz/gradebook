@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layouts/layout_double_sidebar}">
+    <head>
+        <title>Tests</title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/fragments/sidebar::sidebar('tests')"></div>
+
+        <div layout:fragment="content">            
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Tests</h1>
+            </div>
+                       
+			<div class="accordion" id="accordion">
+			  	<div class="card" th:each="course, i:${user.schoolClass?.courses}">
+			    	<div class="card-header"th:id="${'heding' + i.index}">
+			      		<h2 class="mb-0">
+			        		<button class="btn btn-link" type="button" data-toggle="collapse" th:attr="data-target=${'#collapse' + i.index}" aria-expanded="true" aria-controls="collapseOne" th:text="${course.name}"></button>
+			      		</h2>
+			    	</div>
+			
+			    	<div th:id="${'collapse'+i.index}" class="collapse" th:attr="aria-labelledby=${'heading' + i.index}" data-parent="#accordion">
+			      		<div class="card-body">
+			        		
+		        			<h6>Tests</h6>
+							<p th:if="${#lists.isEmpty(tests.get(course))}">No tests assigned!</p>
+                      		<button th:each="test: ${tests.get(course)}" class="btn btn-primary ml-2" th:text="${test.name}"></button>
+							
+							<hr />	
+							
+							<div class="d-flex justify-content-end">
+								<a class="btn btn-primary mr-2" th:href="@{/tests/new(course_id = ${course.id})}">
+	                          		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+	                           		New Test
+	                       		</a>
+                       		</div>
+			        		
+			      		</div>
+			    	</div>
+			  	</div>
+			</div>
+        </div>
+    </body>
+</html>

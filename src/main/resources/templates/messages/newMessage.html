@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}">
+    <head>
+        <title>New Message</title>
+    </head>
+    <body>
+        
+        <div layout:fragment="sidebar" th:insert="/messages/fragments/sidebar::sidebar('new_message')"></div>
+        
+        <div layout:fragment="content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">New Message</h1>
+            </div>
+            
+            <form th:action="@{/messages/new_message}" th:object="${newMessageForm}" method="POST">
+                <div class="form-group row ">
+                    <label for="receiever" class="col-sm-2 col-form-label">Receiever:</label>
+                    <div class="col-sm-10">
+                        <select id="receiever" class="form-control" th:field="*{receiverId}">
+                            <option th:each="receiver:${receivers}" th:value="${receiver.id}" th:text="${receiver.username}"></option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group row ">
+                    <label for="subject" class="col-sm-2 col-form-label">Subject:</label> 
+                    <div class="col-sm-10">
+                        <input id="subject" type="text" class="form-control" th:field="*{subject}" required/>
+                    </div>
+                </div>
+                
+                <div class="form-group"> 
+                    <label for="message">Message:</label>                
+                    <textarea id="message" class="form-control" th:field="*{message}" rows="10" required></textarea>
+                </div>
+                
+                <input type="submit" class="btn btn-primary" value="Send"/>                
+            </form>
+        </div>
+    </body>
+</html>

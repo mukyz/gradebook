@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}">
+    <head>
+        <title>Timetable</title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/administrator/fragments/sidebar::sidebar('classes')"></div>
+        <div layout:fragment="content">            
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Timetable</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a class="btn btn-sm btn-primary" th:href="@{/administrator/classes/timetable/edit(class_id=${classId})}" role="button">Edit Timetable</a>
+                </div>
+            </div>
+            <div th:insert = "fragments/timetable.html::timetable(${timetable})"></div>            
+        </div>
+    </body>
+</html>

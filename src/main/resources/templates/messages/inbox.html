@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}">
+    <head>
+        <title>Messages - Inbox</title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/messages/fragments/sidebar::sidebar('inbox')"></div>
+        <div layout:fragment="content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Inbox</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a class="btn btn-sm btn-primary" th:href="@{/messages/new_message}" role="button">New Message</a>
+                </div>
+            </div>
+            
+            <div class="container-fluid">
+                <div class="row border p-2 bg-primary text-white font-weight-bold">
+                    <div class="col-2 border-right">From</div>
+                    <div class="col-8 border-right">Subject</div>
+                    <div class="col-2">Time</div>
+                </div>
+                <div id="messages">
+                    <a class="text-decoration-none" th:each="msg:${messages}" th:href="@{/messages/{msg_id}(msg_id=${msg?.id})}">
+                        <div class="row border border-top-0 p-2" th:classappend="${msg?.isRead?'bg-light text-muted':'bg-white text-body font-weight-bold' }">
+                            <div class="col-2 border-right" th:text="${msg.senderName}"></div>
+                            <div class="col-8 border-right" th:text="${msg.subject}"></div>
+                            <div class="col-2" th:text="${msg.timestamp}"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <script th:inline="javascript">
+                var lastMessageId = [[${lastMessageId}]];
+                
+                function loadMessages() {
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            proccessResponse(this.responseText);
+                        }
+                    };
+                    xhttp.open("GET", "/api/messages/inbox?last_id=" + lastMessageId , true);
+                    xhttp.send();
+                };
+                
+                window.setInterval(loadMessages, 10000);
+                
+                function proccessResponse(param){                    
+                    var messagesArray = JSON.parse(param);                    
+                    var output = document.getElementById("messages");
+                    
+                    var lastMessage = output.childNodes[0];
+                    messagesArray.forEach(function(msg){
+                        if(msg.id  > lastMessageId) lastMessageId = msg.id;
+                        
+                        output.insertBefore(createMessageElement(msg), lastMessage);            
+                    });                     
+                    
+                }
+                
+                
+                function createMessageElement(msg){
+                    var link = document.createElement("A");
+                    link.setAttribute("href", "/messages/"+msg.id);
+                    link.setAttribute("class", "text-decoration-none " + ((msg.isRead === true)? "text-muted":"text-body font-weight-bold" ));
+
+                    var row = document.createElement("DIV");
+                    row.setAttribute("class", "row border border-top-0 p-2 " + ((msg.isRead === true)? "bg-light":"bg-white" ));                        
+
+                    var colFrom = document.createElement("DIV");
+                    colFrom.setAttribute("class","col-2 border-right" );
+                    var from = document.createTextNode(msg.senderName);
+                    colFrom.appendChild(from);
+                    
+                    var colSubject = document.createElement("DIV");
+                    colSubject.setAttribute("class","col-8 border-right" );                    
+                    var subject = document.createTextNode(msg.subject);
+                    colSubject.appendChild(subject);
+                    
+                    var colTime = document.createElement("DIV");
+                    colTime.setAttribute("class","col-2" );
+                    var time = document.createTextNode(msg.timestamp);
+                    colTime.appendChild(time);
+                    
+                    row.appendChild(colFrom);
+                    row.appendChild(colSubject);
+                    row.appendChild(colTime);
+ 
+                    link.appendChild(row);                        
+
+                    return link;  
+                }
+                
+                
+            </script>
+        </div>
+    </body>
+</html>

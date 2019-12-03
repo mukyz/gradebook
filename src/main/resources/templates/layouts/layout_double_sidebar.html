@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title layout:title-pattern = "$LAYOUT_TITLE - $CONTENT_TITLE">eDnevnik</title>
+        <link th:href ="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen" >
+        <link th:href="@{/css/dashboard.css}" rel="stylesheet" >
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">        
+    </head>
+    <body>
+        <div th:replace="/fragments/header :: header"></div>                 
+        
+        <div class="container-fluid">
+            <div class="row">
+                <div layout:fragment="sidebar" class="col-12 col-md-2 sidebar bg-light"></div>
+                
+                <main class="col-md-8">
+                    <div layout:fragment="messages" th:insert="/fragments/messages::messages(${message})" ></div>
+                    <div layout:fragment="content"></div>
+                </main>
+                
+                <div class="sidebar-right py-3 col-md-2 d-none d-md-block bg-light">                    
+	                  <th:block th:insert="/fragments/announcement::announcement(${announcement})"></th:block>
+	                  <th:block th:insert="/fragments/open_door::open_door(${openDoor})"></th:block>
+                </div>
+            </div>            
+        </div>
+
+        <footer th:replace="/fragments/footer:: footer"></footer> 
+
+        <script th:src="@{/webjars/jquery/3.4.1/jquery.min.js}" ></script> 
+        <script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.bundle.min.js}"></script>        
+        <script sec:authorize="hasAnyAuthority('TEACHER', 'PARENT')" th:src="@{/js/unreadCount.js}"></script>
+        <script>
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            });
+        </script>
+    </body>
+</html>

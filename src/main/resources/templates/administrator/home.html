@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}">
+    <head>
+        <title>Home</title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/administrator/fragments/sidebar::sidebar('home')"></div>
+        
+        <div layout:fragment="content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Administrator</h1>
+            </div>
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img th:src="@{/media/users.png}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">Users</h5>
+                                <p class="card-text">Create new and manage existing users</p>
+                                <a class="btn btn-primary" th:href="@{/administrator/users}">Users</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img th:src="@{/media/students.jpg}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">Students</h5>
+                                <p class="card-text">Create new and manage existing students</p>
+                                <a class="btn btn-primary" th:href="@{/administrator/students}">Students</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img th:src="@{/media/courses.jpg}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">Courses</h5>
+                                <p class="card-text">Create new and manage existing courses</p>
+                                <a class="btn btn-primary" th:href="@{/administrator/courses}">Courses</a>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>     
+                
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img th:src="@{/media/class.jpg}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">Classes</h5>
+                                <p class="card-text">Create new and manage existing classes</p>
+                                <a class="btn btn-primary" th:href="@{/administrator/classes}">Classes</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <!--<img src="..." class="card-img-top" alt="...">-->
+                            <div class="card-body">
+                                <h5 class="card-title">Announcements</h5>
+                                <p class="card-text">Create or delete parent announcements</p>
+                                <a class="btn btn-primary" th:href="@{/administrator/announcements}">Announcements</a>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>                
+            </div>                
+        </div>
+    </body>
+</html>

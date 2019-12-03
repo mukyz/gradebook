@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layouts/layout_double_sidebar}">
+    <head>
+        <title>Timetable</title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/fragments/sidebar::sidebar('timetable')"></div>
+
+        <div layout:fragment="content">            
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Timetable</h1>
+            </div>
+            
+            <th:block th:if="${user.role.roleName eq T(com.softmetrix.model.Role).PARENT}">
+                <form>
+                    <div class="form-group">
+                        <select class="form-control-sm" name="child_id" onchange="this.form.submit()">
+                            <option value="">Select child</option>
+                            <option th:each="child:${user.children}" th:value="${child.id}" th:text="${child.firstName+' '+child.lastName}"></option>
+                        </select>
+                    </div>                                       
+                </form>    
+            </th:block>            
+            
+            <div th:insert = "fragments/timetable.html::timetable(${timetable})"></div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layouts/layout_double_sidebar}">
+    <head>
+        <title th:text="${test.name}"></title>
+    </head>
+    <body>        
+        <div layout:fragment="sidebar" th:insert="/fragments/sidebar::sidebar('announcements')"></div>      
+        
+        <div layout:fragment="content">        
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2" th:text="${test.name}"></h1>
+            </div>     
+
+            <div class="card mb-3" th:each="question:${test.testQuestions}" th:classappend="${(result.points.get(question.id) == 0)? 'border-danger':'border-success'}">
+                <div class="card-header" th:text="${question.questionText}"></div>
+                <div class="card-body">
+                	<div th:each="option: ${question.questionOptions}" th:with="isanswered =${result.result.get(question).containsKey(option)}">
+                		<div class="p-2 mb-1 rounded border"th:if="${isanswered}" th:text="${option.text}" th:classappend="${result.result.get(question).get(option)? 'border-success':'border-danger'}"></div>
+                		<div class="p-2 mb-1" th:unless="${isanswered}" th:text="${option.text}" ></div>
+                		
+                	</div>					                							
+                </div>
+                <div class="card-footer font-weight-bold text-white d-flex justify-content-end" th:text="${result.points.get(question.id)}" th:classappend="${(result.points.get(question.id) == 0)? 'bg-danger':'bg-success'}">
+                	
+                </div>
+            </div>
+            
+            <h5 th:text="${'You won '+result.pointsWon+'/'+result.totalPoints}"></h5>
+            
+
+        </div> 
+        
+    </body>
+</html>

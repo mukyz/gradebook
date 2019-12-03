@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}">
+    <head>
+        <title>New Annoncement</title>
+    </head>
+    <body>        
+        <div layout:fragment="sidebar" th:insert="/administrator/fragments/sidebar::sidebar('announcements')"></div>
+        
+        <div layout:fragment="content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">New Announcement</h1>
+            </div>
+            <form th:action="@{/administrator/announcements/new}" th:object="${announcementDTO}" method="POST">
+                <div class="form-group">
+                    <label for="announcementText">Text</label>
+                    <textarea id="announcementText" th:field="*{text}" class="form-control" required></textarea>                    
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Save"/>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

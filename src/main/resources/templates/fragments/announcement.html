@@ -1,0 +1,25 @@
+<div  th:fragment="announcement(announcement)" >
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5 class="card-title">Latest Announcement</h5>
+        </div>
+        <div class="card-body">
+            <th:block th:if="${announcement!= null}">
+            <h6 class="card-subtitle mb-2 text-muted" th:text="${announcement?.created}"></h6>
+
+            <p class="card-text" th:text="${announcement?.announcement}"></p>
+
+            </th:block>
+            <th:block th:if="${announcement == null}">
+            <h6 class="card-subtitle mb-2 text-muted">No announcements</h6>
+            </th:block>
+            <th:block th:if="${announcement != null}">
+            <div class="d-flex justify-content-end">
+                <a class="btn btn-sm btn-primary" th:href="@{/announcements}">
+                    See All
+                </a>
+            </div>
+            </th:block>
+        </div>
+    </div>          
+</div>

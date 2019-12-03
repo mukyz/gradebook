@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}">
+    <head>
+        <title>New Student</title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/administrator/fragments/sidebar::sidebar('students')"></div>
+        
+        <div layout:fragment="content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">New Student</h1>
+            </div>
+            <form enctype="multipart/form-data" th:action="@{/administrator/students/new}" th:object="${studentDTO}" method="post">
+                <div class="form-row">
+                    <div class="col-8">
+                        <div class="form-row">
+                            <div class="col">
+                                <label for="fname">First Name</label>
+                                <input type="text" class="form-control" id="fname" th:field="*{firstName}" required autofocus/>
+                            </div>
+                            <div class="col">
+                                <label for="lname">Last Name</label>
+                                <input type="text" class="form-control" id="lname" th:field="*{LastName}" required/>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col">
+                                <label for="dob">Date of birth</label>
+                                <input type="date" id="dob" class="form-control" th:field="*{dateOfBirt}" >
+                            </div>
+
+                            <div class="col">
+                                <label for="pob">Place of birth</label>
+                                <input type="text" id="pob" class="form-control" th:field="*{placeOfBirth}" >
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <textarea type="date" id="address" class="form-control" th:field="*{address}" ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="parent">Parent</label>
+                            <select id="parent" class="form-control" th:field="*{parentId}">
+                                <option value="-1"></option>
+                                <option th:each="parent:${parents}" th:value="${parent.id}" th:text="${parent.username}"></option>
+                            </select>                  
+                        </div>
+
+                        <div class="form-group">
+                            <label for="schoolClass">Class</label>
+                            <select id="schoolClass" class="form-control" th:field="*{classId}">
+                                <option value="-1"></option>
+                                <option th:each="schoolClasss:${classes}" th:value="${schoolClasss.id}" th:text="${schoolClasss.name}"></option>
+                            </select>                  
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        Current Avatar:
+                        <img class="img-thumbnail" th:src="@{/avatar/{id}(id=${studentDTO.id})}" />
+                        <div class="form-group">
+                            <label for="avatar">New Avatar</label>
+                            <input type="file" class="form-control-file" id="avatar" th:field="*{avatarFile}"  multiple="false">
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" th:field="*{id}" />
+                <input type="submit" class="btn btn-primary" value="Save"/>
+            </form>
+        </div>
+    </body>
+</html>

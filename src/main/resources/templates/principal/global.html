@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}">
+    <head>
+        <title>Principal</title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/principal/fragments/sidebar::sidebar('global')"></div>
+        <div layout:fragment="content"> 
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2" th:text="${course?.name}"></h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <form>
+                        <div class="form-group">
+                            <select class="form-control-sm" name="course_id" onchange="this.form.submit()">
+                                <option th:each="course, i:${courses}" th:value="${course.id}" th:text="${course.name}"></option>
+                            </select>
+                        </div>                                       
+                    </form>
+                </div>
+            </div>
+            
+            
+            <div id="chartdiv"></div> 
+            
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                    <th>Grade</th>
+                    <th>Count</th>
+                    </thead>
+                    <tbody>
+                        <tr th:each="entry:${data}">
+                            <td th:text="${entry.get('grade')}"></td>
+                            <td th:text =" ${entry.get('count')}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+           
+
+            <script th:inline="javascript">
+            // Themes begin
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            // Create chart instance
+            var chart = am4core.create("chartdiv", am4charts.PieChart);
+
+            // Add data
+            chart.data = [[${data}]];
+
+            // Add and configure Series
+            var pieSeries = chart.series.push(new am4charts.PieSeries());
+            pieSeries.dataFields.value = "count";
+            pieSeries.dataFields.category = "grade";
+            pieSeries.slices.template.stroke = am4core.color("#fff");
+            pieSeries.slices.template.strokeWidth = 2;
+            pieSeries.slices.template.strokeOpacity = 1;
+
+            // This creates initial animation
+            pieSeries.hiddenState.properties.opacity = 1;
+            pieSeries.hiddenState.properties.endAngle = -90;
+            pieSeries.hiddenState.properties.startAngle = -90;
+            </script>
+        </div>
+    </body>
+</html>

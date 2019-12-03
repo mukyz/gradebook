@@ -1,0 +1,20 @@
+<div th:fragment="open_door(openDoor)" >            
+    <div class="card">
+        <div class="card-header"> 
+            Next Open Door Apointment
+        </div>
+        <div class="card-body">
+            <th:body th:if="${openDoor == null}">No new apintments!</th:body>
+            <th:body th:if="${openDoor != null}">
+                <dl>
+                    <dt>Parent</dt>
+                    <dd th:text="${openDoor.parent.username}"></dd>
+                    <dt>Teacher</dt>
+                    <dd th:text="${openDoor.teacher.username}"></dd>
+                    <dt>Date:</dt>
+                    <dd th:text="${#dates.format(openDoor?.date, 'dd MMMM YYYY -  HH:mm')}"></dd>
+                </dl>
+            </th:body>
+        </div>
+    </div>
+</div>

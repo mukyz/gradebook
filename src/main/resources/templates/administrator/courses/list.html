@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}">
+    <head>
+        <title>Courses</title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/administrator/fragments/sidebar::sidebar('courses')"></div>
+        
+        <div layout:fragment="content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Courses</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a class="btn btn-sm btn-primary" th:href="@{/administrator/courses/new}" role="button">Create new Course</a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="course : ${page.content}">
+                            <td th:text="${course.id}" />
+                            <td th:text="${course.name}" />
+                            <td th:text="${course.description}" />
+                            <td>                        
+                                <a class="btn btn-sm btn-outline-secondary" th:href="@{/administrator/courses/edit(course_id=${course.id})}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    Edit
+                                </a>
+                                <a class="btn btn-sm btn-outline-danger" th:href="@{/administrator/courses/delete(course_id=${course.id})}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table> 
+            </div>
+
+            <nav>
+                <ul class="pagination justify-content-end">
+                    <li class="page-item" th:classappend="${page.number eq 0} ? 'disabled'">
+                        <a class="page-link" th:href = "@{/administrator/courses(page=${page.number lt 1 ? 0 : page.number-1})}">Previous</a>
+                    </li>
+                    <li class="page-item" th:each = "i: ${#numbers.sequence(1, page.totalPages, 1)}" th:classappend="${i eq page.number+1}? 'active'">
+                        <a class="page-link" th:href="@{/administrator/courses(page=${i-1})}" th:text="${i}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${page.number + 1 eq page.totalPages } ? 'disabled'">
+                        <a class="page-link" th:href="@{/administrator/courses(page=${page.number+1})}">Next</a>                        
+                    </li>                    
+                </ul>
+            </nav>
+        </div>
+    </body>
+</html>

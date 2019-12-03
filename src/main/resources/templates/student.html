@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layouts/layout_double_sidebar}">
+    <head>
+        <title th:text="${student?.firstName+' '+student?.lastName}"></title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/fragments/sidebar::sidebar('timetable')"></div>
+        
+        <div layout:fragment="content">
+            <div class="row mt-3">
+                <div class="col-sm-3 col-xl-2 d-flex flex-column align-items-center">
+                    <th:block th:if="${student?.avatar != null}">
+                        <img class="img-thumbnail mb-3" th:src="@{/avatar/{studId}(studId=${student?.id})}" alt="avatar"/>
+                    </th:block>
+                    <th:block th:if="${student?.avatar == null}">
+                        <img class="img-thumbnail mb-3" th:src="@{/media/default-avatar.jpg}" alt="default avatar"/>
+                    </th:block>
+                    <h3 class="text-center" th:text="${student?.firstName+' '+student?.lastName}"></h3>
+                    <h5 class="text-muted text-center" th:text="${student?.schoolClass?.name}"></h5>
+                </div>
+                <div class="col-sm-9 col-xl-10">
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">                        
+                            <a class="nav-item nav-link active" 
+                               id="nav-courses-tab" 
+                               data-toggle="tab" 
+                               href="#nav-courses" 
+                               role="tab" 
+                               aria-controls="nav-courses" 
+                               aria-selected="false">
+                                Courses
+                            </a>
+
+                            <a class="nav-item nav-link" 
+                               id="nav-details-tab" 
+                               data-toggle="tab" 
+                               href="#nav-details" 
+                               role="tab" 
+                               aria-controls="nav-details" 
+                               aria-selected="true">
+                                Details
+                            </a>                            
+                        </div>
+                    </nav>
+                    <div class="tab-content border border-top-0 p-3" id="nav-tabContent">
+                        <div class="tab-pane fade  show active" id="nav-courses" role="tabpanel" aria-labelledby="nav-courses-tab">  
+                            <th:block th:if="${#lists.isEmpty(gradeMap)}"><p>No courses assigned!</p></th:block>
+                            <th:block th:if="${not #lists.isEmpty(gradeMap)}">
+                            <div class="accordion" id="accordionExample" >
+                                <div class="card" th:each="entry,i : ${gradeMap}">
+                                    <div class="card-header" 
+                                         th:id="${'heading'+i.index}" 
+                                         data-toggle="collapse" 
+                                         th:attr="data-target=${'#colapse'+entry.key.id}, aria-controls=${'colapse'+entry.key.id}" 
+                                         aria-expanded="true" 
+                                         style="cursor:pointer"
+                                         role="button">
+                                        <h5>
+                                            <span th:text="${entry.key.name}"></span>
+                                            <span class="badge badge-success" th:if="${finalGradeMap.get(entry.key) != null}"
+                                                  th:text="${'FINAL GRADE: ' + finalGradeMap.get(entry.key).grade}">                                                
+                                            </span>
+                                        </h5>  
+                                    </div>
+                                    <div th:id="${'colapse'+entry.key.id}" class="collapse" th:attr="aria-labelledby=${'heading'+i.index}" data-parent="#accordionExample" th:classappend="${entry.key.id==modifiedCourseId? 'show':''}">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h6>Grades</h6>
+                                                    <th:block th:each="grade:${entry.value}">                                                    
+                                                        <th:block sec:authorize="hasAuthority('TEACHER')">  
+                                                            <span data-toggle="modal" 
+                                                                  th:attr="data-target=${'#grade'+grade.id}">
+                                                                <button type="button" 
+                                                                        class="btn btn btn-outline-info mr-1" 
+                                                                        data-toggle="tooltip" 
+                                                                        data-placement="top" 
+                                                                        th:title="${grade.note}"                                                              
+                                                                        th:text="${grade.grade}"></button>
+                                                            </span>
+                                                    
+                                                            <div class="modal fade" th:id="${'grade'+grade.id}" tabindex="-1" role="dialog" th:attr="aria-labelledby=${'labelgrade'+grade.id}" aria-hidden="true">
+                                                                <div class="modal-dialog modal-sm" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" th:id="${'labelgrade'+grade.id}">Delete Grade</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <p>Are you sure you want to delete this grade?</p>
+                                                                            <hr />
+                                                                            <span class="d-flex justify-content-end">                                                                            
+                                                                                <a th:href="@{/students/delete_grade(id=${grade.id})}"
+                                                                                   class="btn bt-sm btn-danger">
+                                                                                    Delete
+                                                                                </a>
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </th:block>
+                                                        <th:block sec:authorize="hasAuthority('PARENT')">
+                                                            <button type="button" 
+                                                                class="btn btn btn-outline-info mr-1" 
+                                                                data-toggle="tooltip" 
+                                                                data-placement="top" 
+                                                                th:title="${grade.note}"                                                              
+                                                                th:text="${grade.grade}"></button> 
+                                                        </th:block>
+                                                    </th:block>
+
+                                                    <p th:if="${#lists.isEmpty(entry.value)}">No grades yet!</p>
+                                                    <hr /> 
+                                                    <h6>Tests</h6>
+                                                    <th:block sec:authorize="hasAuthority('PARENT')">                                                    
+                                                    	<p th:if="${#maps.isEmpty(tests.get(entry.key))}">No tests assigned!</p>
+                                                    	<a th:each="entry: ${tests.get(entry.key)}" th:if="${entry.value==null}" th:href="@{/tests/{id}(id=${entry.key.id}, student_id=${student.id})}" class="btn btn-primary ml-2" th:text="${entry.key.name}"></a>
+                                                    	<span class="ml-2 btn btn-warning" th:each="entry: ${tests.get(entry.key)}" th:if="${entry.value!=null}" th:text="${entry.key.name +' '+ entry.value.pointsWon+'/'+ entry.value.totalPoints}"></span>
+                                                    	                                       
+                                                    </th:block>       
+                                                    
+                                                    <th:block sec:authorize="hasAuthority('TEACHER')">
+														<p th:if="${#maps.isEmpty(tests.get(entry.key))}">No tests assigned!</p>
+                                                    	<button th:each="entry: ${tests.get(entry.key)}"  class="btn btn-primary ml-2" th:text="${entry.key.name}"></button>
+													</th:block>
+													<hr />
+                                                                                                
+                                                </div>
+                                            </div>
+                                            <th:block sec:authorize="hasAuthority('TEACHER')">
+                                            <div class="row">
+                                                <div class="col d-flex justify-content-end">                                                                                    
+                                                    <th:block th:if="${finalGradeMap.get(entry.key) == null}">
+                                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" th:attr="data-target=${'#modalSid'+student.id+'cid'+entry.key.id}">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                                            New Grade
+                                                        </button>
+                                                        <!-- Modal -->
+                                                        <div class="modal fade" th:id="${'modalSid'+student.id+'cid'+entry.key.id}" tabindex="-1" role="dialog" th:attr="aria-labelledby=${'labelSid'+student.id+'cid'+entry.key.id}" aria-hidden="true">
+                                                            <div class="modal-dialog" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" th:id="${'labelSid'+student.id+'cid'+entry.key.id}">New Grade</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form   class="p-3" 
+                                                                                th:action="@{/students/new_grade}" 
+                                                                                th:object="${gradeFormDTO}" 
+                                                                                method="POST">
+                                                                            <div class="form-group d-flex justify-content-center">
+                                                                                <div class="btn-group-toggle" data-toggle="buttons">
+                                                                                    <label class="btn btn-lg btn-outline-primary active">
+                                                                                        <input type="radio" name="grade" value="1" checked> 1
+                                                                                    </label>
+                                                                                    <label class="btn btn-lg btn-outline-primary">
+                                                                                        <input type="radio" name="grade" value="2"> 2
+                                                                                    </label>
+                                                                                    <label class="btn btn-lg btn-outline-primary">
+                                                                                        <input type="radio" name="grade" value="3"> 3
+                                                                                    </label>
+                                                                                    <label class="btn btn-lg btn-outline-primary">
+                                                                                        <input type="radio" name="grade" value="4"> 4
+                                                                                    </label>
+                                                                                    <label class="btn btn-lg btn-outline-primary">
+                                                                                        <input type="radio" name="grade" value="5"> 5
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="form-group">
+                                                                                <label th:for="${'noteSid'+student.id+'cid'+entry.key.id}">
+                                                                                    Note:
+                                                                                </label>
+                                                                                <textarea class="form-control" 
+                                                                                          th:field="*{note}" 
+                                                                                          th:id="${'noteSid'+student.id+'cid'+entry.key.id}"></textarea>
+                                                                            </div>
+                                                                            <input type="hidden" name="studentId" th:value="${student.id}">
+                                                                            <input type="hidden" name="courseId" th:value="${entry.key.id}">
+                                                                            <hr>
+                                                                            <div class="form-group d-flex justify-content-end">
+                                                                                <button type="submit" class="btn btn-primary">Save</button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <th:block th:if="${not #lists.isEmpty(entry.value)}">
+                                                            <button class="btn btn-sm btn-warning ml-2"
+                                                                    data-toggle="modal" 
+                                                                    th:attr="data-target=${'#finalgradeSid'+student.id+'cid'+entry.key.id}">
+                                                                Final grade
+                                                            </button>
+
+                                                            <div class="modal fade" th:id="${'finalgradeSid'+student.id+'cid'+entry.key.id}" tabindex="-1" role="dialog" th:attr="aria-labelledby=${'labelfinalgradeSid'+student.id+'cid'+entry.key.id}" aria-hidden="true">
+                                                                <div class="modal-dialog modal-sm" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" th:id="${'labelfinalgradeSid'+student.id+'cid'+entry.key.id}">Final Grade</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <p th:text="${'This students average is: '+#numbers.formatDecimal(@gradeServiceImpl.getAverage(student, entry.key),0,2)+'. Choose a grade bellow that you feel is best.'}"></p>
+                                                                            <hr />
+                                                                            <form   class="p-3" 
+                                                                                    th:action="@{/students/new_grade}" 
+                                                                                    th:object="${gradeFormDTO}" 
+                                                                                    method="POST">
+                                                                                <div class="form-group d-flex justify-content-center">
+                                                                                    <div class="btn-group-toggle" data-toggle="buttons">
+                                                                                        <label class="btn btn-outline-primary active">
+                                                                                            <input type="radio" name="grade" value="1" checked> 1
+                                                                                        </label>
+                                                                                        <label class="btn btn-outline-primary">
+                                                                                            <input type="radio" name="grade" value="2"> 2
+                                                                                        </label>
+                                                                                        <label class="btn btn-outline-primary">
+                                                                                            <input type="radio" name="grade" value="3"> 3
+                                                                                        </label>
+                                                                                        <label class="btn btn-outline-primary">
+                                                                                            <input type="radio" name="grade" value="4"> 4
+                                                                                        </label>
+                                                                                        <label class="btn btn-outline-primary">
+                                                                                            <input type="radio" name="grade" value="5"> 5
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                <input type="hidden" name="studentId" th:value="${student.id}">
+                                                                                <input type="hidden" name="courseId" th:value="${entry.key.id}">
+                                                                                <input type="hidden" name="isFinal" th:value="true">
+                                                                                <hr>
+                                                                                <div class="form-group d-flex justify-content-end">
+                                                                                    <button type="submit" class="btn btn-primary">Save</button>
+                                                                                </div>
+                                                                            </form>                                                            
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </th:block>
+                                                    </th:block>
+                                                </div>
+                                            </div>
+                                            </th:block>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </th:block>
+                        </div>                        
+                        <div class="tab-pane fade pt-3" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab">
+                            <div class="row">
+                                <div class="col-sm">
+                                    <h3>Student details</h3>
+                                    <hr />
+                                    <dl class="row">                                        
+                                        <dt class="col-lg-4">Date of birth:</dt>
+                                        <dd class="col-lg-8 mb-5" th:text="${#dates.format(student?.dateOfBirth, 'dd MMMM YYYY')}"></dd>
+                                        
+                                        <dt class="col-lg-4">Place of birth:</dt>
+                                        <dd class="col-lg-8 mb-5" th:text="${student?.placeOfBirth}"></dd>
+                                        
+                                        <dt class="col-lg-4">Address:</dt>
+                                        <dd class="col-lg-8 mb-5" th:text="${student?.address}"></dd>
+                                    </dl>
+                                </div>
+                                
+                                
+                                
+                                <div class="col-sm-5">
+                                    <h3>Parent</h3>
+                                    <hr />
+                                    <dl class="row">                                        
+                                        <dt class="col-sm">Parent user:</dt>
+                                        <dd class="col-sm" th:text="${student?.parent?.username}"></dd>
+                                    </dl>
+                                    
+                                    <a th:if="${student?.parent != null}" class="btn btn-sm btn-primary" th:href="@{/messages/new_message(receiverId=${student.parent.id})}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                        Contact Parent
+                                    </a>
+                                    
+                                </div>
+                                
+                                
+                                
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>     
+    </body>
+</html>

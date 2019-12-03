@@ -1,0 +1,22 @@
+<div th:fragment="timetable(timetable)">
+    <th:block th:if="${timetable!=null}">
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-sm">
+            <thead class="thead-dark">
+            <th>#</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+            </thead>
+            <tbody>
+                <tr th:each="order_num, i: ${timetable}">
+                    <td th:text="${i.index+1}"></td>
+                    <td th:each="day:${order_num}" th:text="${day}"></td>
+                </tr>                    
+            </tbody>
+        </table>
+    </div>
+    </th:block>
+</div>

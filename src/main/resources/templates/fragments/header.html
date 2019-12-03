@@ -1,0 +1,18 @@
+<nav class="navbar navbar-dark bg-dark flex-md-nowrap p-0 shadow" th:fragment="header">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" th:href="@{/}"><strong>eDnevnik</strong></a>
+
+    <ul class="nav ml-auto mr-3 align-items-center">
+    	<li class="nav-item text-white">
+    		<strong>Hello [[${#httpServletRequest.remoteUser}]]!</strong>
+    	</li>
+        <li class="nav-item " sec:authorize="hasAnyAuthority('TEACHER','PARENT')">
+            <a class="nav-link d-flex align-items-center" th:href="@{/messages}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail mr-1"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                Messages <span class="badge badge-danger badge-pill unread-count ml-1">0</span>
+            </a>
+        </li>  
+    </ul>
+    <form class="form-inline mr-2" th:action="@{/logout}" method="post">
+        <input class="btn btn-sm btn-outline-danger" type="submit" value="Sign Out"/>
+    </form>
+</nav>        

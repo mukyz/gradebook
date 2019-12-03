@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layouts/layout}">
+    <head>
+        <title>Principal</title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/principal/fragments/sidebar::sidebar('class')"></div>
+        <div layout:fragment="content"> 
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2" th:text="${schoolClass?.name}"></h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <form>
+                        <div class="form-group">
+                            <select class="form-control-sm" name="class_id" onchange="this.form.submit()">
+                                <option th:each="class:${classes}" th:value="${class.id}" th:text="${class.name}"></option>
+                            </select>
+                        </div>                                       
+                    </form>
+                </div>
+            </div>
+
+            <div id="chartdiv"></div> 
+            
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    <thead>
+                    <th>Predmet</th>
+                    <th>No Final Grade</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                    </thead>
+                    <tbody>
+                        <tr th:each="entry:${data}">
+                            <td style="width:16.66%" th:text =" ${entry.get('course')}"></td>
+                            <td style="width:8.33%" th:text =" ${entry.get('No Final Grade')}"></td>
+                            <td style="width:8.33%" th:text =" ${entry.get(1)}"></td>
+                            <td style="width:8.33%" th:text =" ${entry.get(2)}"></td>
+                            <td style="width:8.33%" th:text =" ${entry.get(3)}"></td>
+                            <td style="width:8.33%" th:text =" ${entry.get(4)}"></td>
+                            <td style="width:8.33%" th:text =" ${entry.get(5)}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+           
+
+            <script th:inline="javascript">
+            am4core.ready(function() {
+
+            // Themes begin
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            // Create chart instance
+            var chart = am4core.create("chartdiv", am4charts.XYChart);
+            
+            chart.colors.list = [
+            	am4core.color("#666666"),
+            	am4core.color("#FF0000"),
+            	am4core.color("#FFC000"),
+            	am4core.color("#E0FF00"),
+            	am4core.color("#80FF00"),
+            	am4core.color("#10FF00")
+            ];
+
+
+            // Add data
+            chart.data = [[${data}]];
+
+            // Create axes
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "course";
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.renderer.cellStartLocation = 0.1;
+            categoryAxis.renderer.cellEndLocation = 0.9;
+
+
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+            valueAxis.min = 0;
+
+            // Create series
+            function createSeries(field, name) {
+
+              // Set up series
+              var series = chart.series.push(new am4charts.ColumnSeries());
+              series.name = name;
+              series.dataFields.valueY = field;
+              series.dataFields.categoryX = "course";
+              series.sequencedInterpolation = true;
+
+              // Make it stacked
+//               series.stacked = true;
+
+
+              
+              series.columns.template.width = am4core.percent(100);
+              series.columns.template.tooltipText = "[bold]{name}[/]\n[font-size:14px]{categoryX}: {valueY}";
+
+              // Add label
+              var labelBullet = series.bullets.push(new am4charts.LabelBullet());
+              labelBullet.label.text = "{valueY}";
+			  labelBullet.label.dy = 10;
+              labelBullet.label.hideOversized = true;
+              labelBullet.label.truncate = true;
+
+              return series;
+            }
+            createSeries("No Final Grade", "No Final Grade");
+            createSeries("1", "Grade 1");
+            createSeries("2", "Grade 2");
+            createSeries("3", "Grade 3");
+            createSeries("4", "Grade 4");
+            createSeries("5", "Grade 5");         
+
+            // Legend
+            chart.legend = new am4charts.Legend();
+
+            }); // end am4core.ready()
+
+            </script>   
+        </div>
+    </body>
+</html>

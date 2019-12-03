@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout_double_sidebar}">
+    <head>
+        <title>Home</title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/fragments/sidebar::sidebar('home')"></div>
+        
+        <div layout:fragment="content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Dashboard</h1>
+            </div>
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img th:src="@{/media/students.jpg}" class="card-img-top" alt="students">
+                            <div class="card-body">
+                                <h5 class="card-title">Students</h5>
+                                <p class="card-text">View Students</p>
+                                <a class="btn btn-primary" th:href="@{/students}">Students</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img th:src="@{/media/timetable.jpg}" class="card-img-top" alt="timetable">
+                            <div class="card-body">
+                                <h5 class="card-title">Timetable</h5>
+                                <p class="card-text">View Tiemetable</p>
+                                <a class="btn btn-primary" th:href="@{/timetable}">Timetable</a>
+                            </div>
+                        </div>
+                    </div>  
+                    
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img th:src="@{/media/Open_Day.jpg}" class="card-img-top" alt="courses">
+                            <div class="card-body">
+                                <h5 class="card-title">Open Day</h5>
+                                <p class="card-text">View and approve Open Day requests by the parents</p>
+                                <a class="btn btn-primary" th:href="@{/open_door}">Open Day</a>
+                            </div>
+                        </div>
+                    </div>                    
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img th:src="@{/media/Open_Day.jpg}" class="card-img-top" alt="courses">
+                            <div class="card-body">
+                                <h5 class="card-title">Announcements</h5>
+                                <p class="card-text">View and approve Open Day requests by the parents</p>
+                                <a class="btn btn-primary" th:href="@{/announcements}">Announcements</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>                
+        </div>
+    </body>
+</html>

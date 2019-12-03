@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}">
+    <head>
+        <title>Principal</title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/principal/fragments/sidebar::sidebar('home')"></div>
+        <div layout:fragment="content">             
+            <div class="row mt-3">
+            	<div class="col-md-4 mb-3">
+            		<a th:href="@{/principal/global}">
+	            		<div class="card">
+	            			<div class="card-body">
+	            				Statistics by Course
+	            			</div>
+	            		</div>
+            		</a>
+            	</div>
+            	
+            	<div class="col-md-4 mb-3">
+            		<a th:href="@{/principal/class}">
+	            		<div class="card">
+	            			<div class="card-body">
+	            				Statistics by Class
+	            			</div>
+	            		</div>
+            		</a>
+            	</div>            	
+            </div>
+        </div>
+    </body>
+</html>

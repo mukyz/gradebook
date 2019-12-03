@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}">
+    <head>
+        <title>New Class</title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/administrator/fragments/sidebar::sidebar('classes')"></div>
+        
+        <div layout:fragment="content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">New Class</h1>
+            </div>
+            <form th:action="@{/administrator/classes/new}" th:object="${schoolClassForm}" method="post">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" th:field="*{name}" required/>
+                </div>
+                
+                <div class="form-group">
+                    <label for="teacher">Teacher</label>
+                    <select id="teacher" class="form-control" th:field="*{teacherId}">
+                        <option value="-1"></option>
+                        <option th:each="teacher:${teachers}" th:value="${teacher?.id}" th:text="${teacher?.username}"></option>
+                    </select>                  
+                </div>
+                
+
+                <div class="form-group">
+                    <label for="students">Students</label>
+                    <select id="students" class="form-control" th:field="*{studentIds}" multiple>
+                        <option th:each="student:${students}" th:value="${student.id}" th:text="${student.firstName+' '+student.lastName}"></option>
+                    </select>   
+                </div>
+
+                <div class="form-group">
+                    <label for="courses">Courses</label>
+                    <select id="courses" class="form-control" th:field="*{coursesIds}" multiple>
+                        <option th:each="course:${courses}" th:value="${course?.id}" th:text="${course?.name}"></option>
+                    </select>   
+                </div>
+                
+                <input type="hidden" th:field="*{id}" />
+                <input type="submit" class="btn btn-primary" value="Save"/>
+            </form>
+            
+            <script type="text/javascript">
+	            $(function () {
+	                $('#students').select2();
+	                $('#courses').select2();
+	            })            
+            </script>
+
+    </body>
+</html>

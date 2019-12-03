@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout_double_sidebar}">
+    <head>
+        <title th:text="${title}"></title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/fragments/sidebar::sidebar('students')"></div>        
+        
+        <div layout:fragment="content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2" th:text="${title}"></h1>
+            </div>
+            
+            <div class="row">
+                     <div class="col-sm-4 col-lg-3 mb-3" th:each="student:${students}">
+                    <div class="card h-100">
+                        
+                        <div class="card-body p-1 d-flex justify-content-start align-items-center">                            
+                            <th:block th:if="${student.avatar != null}">
+                                <img class="img-thumbnail mr-3" th:src="@{/avatar/{studId}(studId=${student.id})}" style="max-width: 30%" alt="avatar"/>
+                            </th:block>
+                            <th:block th:if="${student.avatar == null}">
+                                <img class="img-thumbnail mr-3 " th:src="@{/media/default-avatar.jpg}" style="width: 30%" alt="default avatar"/>
+                            </th:block>
+                            <h5 class="card-title" th:text="${student.firstName+' '+student.lastName}"></h5>
+                            
+                        </div>
+                        <div class="card-footer d-flex justify-content-end">
+<!--                            <a  class="btn btn-sm btn-primary"th:if="${student.parent != null}" th:href="@{/messages/new_message(receiverId=${student.parent?.id})}" data-toggle="tooltip" data-placement="top" title="Send a message to parent">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            </a>-->
+                            
+                            <a class="btn btn-sm btn-primary ml-2" th:href="@{/students/student/{id}(id=${student.id})}">                                    
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
+                                Details
+                            </a>
+                        </div>
+                    </div>
+                </div>               
+            </div>           
+        </div> 
+    </body>
+</html>

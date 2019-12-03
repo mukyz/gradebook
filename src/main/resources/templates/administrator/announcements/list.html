@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout}" th:with="activeNav='announcements'">
+    <head>
+        <title>Announcements</title>
+    </head>
+    <body>
+        <div layout:fragment="sidebar" th:insert="/administrator/fragments/sidebar::sidebar('announcements')"></div>
+        
+        <div layout:fragment="content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Announcements</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <a class="btn btn-sm btn-primary" th:href="@{/administrator/announcements/new}" role="button">Create new Announcement</a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-md">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Publish Date</th>
+                            <th>Text</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="announcement : ${announcements}">
+                            <td th:text="${announcement.id}" />
+                            <td th:text="${announcement.created}" />
+                            <td th:text="${announcement.announcement}" />
+                            <td>                        
+                                <a class="btn btn-sm btn-outline-danger" th:href="@{/administrator/announcements/delete(id=${announcement.id})}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table> 
+            </div>
+        </div>
+    </body>
+</html>

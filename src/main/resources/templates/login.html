@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login</title>
+    <link th:href ="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen" >
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/floating-labels.css}" rel="stylesheet">
+</head>
+    <body>    	
+        <form class="form-signin" th:action="@{/login}" method="POST" >
+	        <div class="text-center mb-4">
+	            <h1 class="h3 mb-3 font-weight-bold text-white">eDnevnik</h1>                
+	        </div>
+	    	<div th:if="${param.error}">
+	    		<div class="alert alert-danger">
+	    			<strong>Invalid username and password.</strong>
+	    		</div>	            
+	        </div>
+	        <div th:if="${param.logout}">
+	        	<div class="alert alert-success">
+	        		<strong>You have been logged out.</strong>
+	        	</div>	            
+	        </div>
+            <div class="form-label-group">
+                <input type="text" id="username" name="username" class="form-control" placeholder="Username" required autofocus>
+                <label for="username">Username</label>
+            </div>
+            
+            <div class="form-label-group">
+                <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required/>
+                <label for="inputPassword">Password</label>
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        </form>       
+    </body>
+</html>
+

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layouts/layout_double_sidebar}">
+    <head>
+        <title>New Test</title>
+    </head>
+    <body>        
+        <div layout:fragment="sidebar" th:insert="/fragments/sidebar::sidebar('announcements')"></div>      
+        
+        <div layout:fragment="content" class="mt-3">        
+            <form th:action="@{/tests/new}" method="POST" th:object="${testForm}">
+            	<div class="form-group">
+            		<label for="test-name">Name</label>
+            		<input type="text" id="test-name" class="form-control" th:field="*{name}" >
+            	</div>
+            	
+            	
+            	<div id="questions"></div>
+            	<div class="d-flex justify-content-end">
+            		<button type="button" class="btn btn-primary" onclick="newQuestionForm()" >AddQuestion</button>
+            	</div>
+            	<hr>
+            	<div class="d-flex justify-content-end">
+            		<input type="hidden" th:field="*{courseId}" >
+            		<button type="submit" class="btn btn-primary">Save Test</button>
+            	</div>
+            </form>
+            
+            
+            
+
+            <!-- Modal -->
+			<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  	<div class="modal-dialog modal-lg" role="document">
+			    	<div class="modal-content">
+			      		<div class="modal-header">
+			        		<h5 class="modal-title" id="modalLabel">New Question</h5>
+			        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          			<span aria-hidden="true">&times;</span>
+		        			</button>
+			      		</div>
+			      		<div class="modal-body">
+			        		<form>
+			        			<div class="form-group">
+			        				<label for="questionText">Question Text</label>
+            						<input type="text" id="questionText" class="form-control" >
+			        			</div>
+			        			<div id="question-options"></div>
+			        			
+			        			<button type="button" class="btn btn-primary" onclick="addQuestionOption()" >New Option</button>
+			        			
+			        			<hr>
+			        			<div class="d-flex justify-content-end">
+			        				<button type="button" class="btn btn-secondary mr-3" data-dismiss="modal">Cancle</button>
+			        				<button type="button" class="btn btn-primary" onclick="addQuestion(this.form)">Add Question</button>			        				
+			        			</div>
+		        		
+			        		</form>			        	
+			      		</div>
+		    		</div>
+		  		</div>
+			</div>
+            
+            <script>
+            	var questionNum = 0;
+            	var optionNum = 0;
+            
+            	function newQuestionForm(){  
+            		optionNum = 0;
+            		$('#question-options').empty();
+            		$('#modal').modal('show');            		
+            	}
+            	
+            	function addQuestionOption(){
+            		var str = 	'<div class="form-row align-items-center">'+
+            						'<div class="col-sm-7 my-2">' + 
+										'<label class="sr-only" for="optionText'+optionNum+'">Option Text</label>'+
+										'<input type="text" name="optionText'+optionNum+'" id="optionText'+optionNum+'" class="form-control" placeholder="Option Text" required>'+
+									'</div>' +            			
+            						'<div class="col-sm-2 my-2">' + 
+            							'<div class="form-check">'+
+            								'<input type="checkbox" name="correctOption'+optionNum+'" id="correctOption'+optionNum+'" class="form-check-input" >'+
+            								'<label class="form-check-label" for="correctOption'+optionNum+'">Is Correct</label>'+
+           								'</div>'+
+           							'</div>' +
+           							'<div class="col-sm-3 my-2">' + 
+        								'<label class="sr-only" for="optionValue'+optionNum+'">Value</label>'+
+        								'<input type="number" name="optionValue'+optionNum+'" id="optionValue'+optionNum+'" class="form-control" value="0" placeholder="value" required >'+
+       								'</div>'
+								'</div>';
+            		
+            		$('#question-options').append(str);      
+            		optionNum++;
+            	} 
+            	
+            	function addQuestion(form){     
+            		var newQuestion =  
+            			'<div class="border p-3">'+
+            				'<div class="form-group">'+
+            					'<label>Question</label>'+
+           						'<input class="form-control" type="text" name="questions['+questionNum+'].questionText" value="'+ form['questionText'].value +'" readonly>'+
+       						'</div>'+
+       						'<hr>';
+            		
+            		for(i = 0; i < optionNum; i++) {
+            			
+            			
+            			
+            			newQuestion += 
+            				'<div class="form-row">'+
+            					'<div class="col-sm-8 my-2">'+
+            					'<input class="form-control" type="text" name="questions['+questionNum+'].questionOptions['+i+'].text" value="'+ form['optionText'+i].value +'" readonly>'+
+            				'</div>';
+            			newQuestion += 	'<div class="col-sm-2 my-2">'+
+           									'<div class="form-check">';
+            			newQuestion += form['correctOption'+i].checked? '<input class="form-check-input" type="checkbox" name="questions['+questionNum+'].questionOptions['+i+'].isCorrect" checked readonly><label class="form-check-label">Correct Option</label>':
+            				'<input class="form-check-input" type="checkbox" name="questions['+questionNum+'].options['+i+'].isCorrect" readonly><label class="form-check-label">Correct Option</label>';
+            				newQuestion +='</div></div>';
+           				newQuestion +='<div class="col-sm-2"><input class="form-control" type="number" name="questions['+questionNum+'].questionOptions['+i+'].value" value="'+ form['optionValue'+i].value +'" readonly></div></div>';
+            		
+           				
+            		}
+            		newQuestion+='</div>'
+            		$('#questions').append(newQuestion);
+            		questionNum++;
+            		$('#modal').modal('hide'); 
+            	}
+            	
+            </script>
+            
+        </div> 
+        
+    </body>
+</html>

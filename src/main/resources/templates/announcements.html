@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/layout_double_sidebar}">
+    <head>
+        <title>Announcements</title>
+    </head>
+    <body>        
+        <div layout:fragment="sidebar" th:insert="/fragments/sidebar::sidebar('announcements')"></div>      
+        
+        <div layout:fragment="content">        
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Announcements</h1>
+            </div>     
+
+            <div class="card mb-3" th:each="announcement:${announcements}">
+                <div class="card-header" th:text="${#dates.format(announcement?.created, 'dd MMMM YYYY -  HH:mm')}">                
+                </div>
+                <div class="card-body" th:text="${announcement?.announcement}"></div>
+            </div>
+        </div> 
+        
+    </body>
+</html>
